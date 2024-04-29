@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "cv-tutorial-cap"
+version = "0.1.0"
+description = ""
+authors = ["Thivyesh Ahilathasan <a.thivy@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+opencv-python = "^4.9.0.80"
+transformers = "^4.40.1"
+ultralytics = "^8.2.5"
+timm = "^0.9.16"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
