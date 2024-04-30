@@ -11,7 +11,13 @@ opencv-python = "^4.9.0.80"
 transformers = "^4.40.1"
 ultralytics = "^8.2.5"
 timm = "^0.9.16"
+supervision = "^0.20.0"
+setuptools = "^69.5.1"
+scikit-image = "^0.23.2"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
 
 [build-system]
 requires = ["poetry-core"]
