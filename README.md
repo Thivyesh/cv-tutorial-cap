@@ -1,12 +1,12 @@
 # Workshop: Object detection
 ## Content
 In this workshop we will go through:
-- **Fundamentals of object detection
-- **When to do object detection and its types
-- **Types
-- **Coding
-- **Model examples
-- **Architecture
+- Fundamentals of object detection
+- When to do object detection and its types
+- Types
+- Coding
+- Model examples
+- Architecture
 
 # Introduction to Object Detection
 
