@@ -1,48 +1,93 @@
-import torch
 import cv2
-import supervision as sv
+import torch  # Import YOLO model from Ultralytics
+import supervision as sv  # Import the supervision library for annotations
 
-#https://pytorch.org/hub/ultralytics_yolov5/
-#https://supervision.roboflow.com/how_to/detect_and_annotate/
+class ObjectDetectionWithWebcam:
+    """
+    This class performs real-time object detection using a webcam and YOLO model.
 
-model = torch.hub.load("ultralytics/yolov5", "yolov5s", pretrained=True)
+    Attributes:
+        model (YOLO): YOLO object detection model.
+        webcam (cv2.VideoCapture): Webcam object for capturing frames.
+    """
 
-cap = cv2.VideoCapture(0)
+    def __init__(self, model_weights: str = "ultralytics/yolov5", model_name: str = "yolov5s"):
+        """
+        Initializes the ObjectDetectionWithWebcam class.
 
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
-while True:
-    ret, frame =  cap.read()
+        Args:
+            model_weights (str): Path to the YOLO model weights file (default is 'yolov8s.pt').
+        """
+        self.model = torch.hub.load(model_weights, model_name, pretrained=True)
 
-    if not ret:
-        print("Can't receive frame (stream end?), Exiting ...")
-        break
-    
-    #predict
-    results = model(frame)
-    print(results)
-    detections = sv.Detections.from_yolov5(results)
+        self.webcam = cv2.VideoCapture(0)
 
-    bounding_box_annotator = sv.BoundingBoxAnnotator(
-        thickness=4
-    )
-    label_annotator = sv.LabelAnnotator()
+        if not self.webcam.isOpened():
+            raise RuntimeError("Cannot open webcam")
 
-    labels = [
-        model.model.names[class_id]
-        for class_id
-        in detections.class_id
-    ]
+    def __del__(self):
+        """
+        Cleans up resources by releasing the webcam.
+        """
+        self.webcam.release()
+        cv2.destroyAllWindows()
 
-    annotated_image = bounding_box_annotator.annotate(
-        scene=frame, detections=detections)
-    annotated_image = label_annotator.annotate(
-        scene=annotated_image, detections=detections, labels=labels)
+    def detect_objects(self):
+        """
+        Performs real-time object detection using the webcam and displays the annotated frames.
+        """
+        while True:
+            # Read frame from webcam
+            ret, frame = self.webcam.read()
 
-    cv2.imshow("frame", frame)
-    if cv2.waitKey(1) == ord("q"):
-        break
+            if not ret:
+                print("Can't receive frame (stream end?), Exiting ...")
+                break
+            
+            # Perform object detection on the frame using the YOLO model
+            results = self.model(frame)
 
-cap.release()
-cv2.destroyAllWindows()
+            # Convert YOLO detections to Supervision Detections format
+            detections = sv.Detections.from_yolov5(results)
+
+            # Create a bounding box annotator with specified thickness
+            bounding_box_annotator = sv.BoundingBoxAnnotator(
+                thickness=4
+            )
+
+            # Create a label annotator
+            label_annotator = sv.LabelAnnotator()
+
+            # Filter out detections with class_id not equal to 0 (human class)
+            # detections = detections[detections.class_id != 0] #optional
+
+            # Get labels for each detected object
+            labels = [
+                self.model.model.names[class_id]
+                for class_id
+                in detections.class_id
+            ]
+
+            # Annotate the frame with bounding boxes
+            annotated_image = bounding_box_annotator.annotate(
+                scene=frame, detections=detections)
+
+            # Annotate the frame with labels
+            annotated_image = label_annotator.annotate(
+                scene=annotated_image, detections=detections, labels=labels)
+
+            # Display the annotated frame
+            cv2.imshow("Object Detection", annotated_image)
+
+            # Exit loop if 'q' key is pressed
+            if cv2.waitKey(1) == ord("q"):
+                break
+
+# Usage example:
+if __name__ == "__main__":
+    # Initialize ObjectDetectionWithWebcam class
+    detector = ObjectDetectionWithWebcam()
+
+    # Perform real-time object detection
+    detector.detect_objects()
+    detector.__del__()
