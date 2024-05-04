@@ -8,6 +8,9 @@ In this workshop we will go through:
 - Model examples
 - Architecture
 
+# Start by:
+Running the commands in "create_venv.sh" to create a venv and install all the necessary packages
+
 # Introduction to Object Detection
 
 Object detection is a fundamental task in computer vision that involves identifying and locating objects within an image or video frame. It has numerous applications across various industries, including autonomous vehicles, surveillance systems, medical imaging, and retail.
