@@ -1,5 +1,5 @@
 import cv2
-import torch  # Import YOLO model from Ultralytics
+import torch 
 import supervision as sv  # Import the supervision library for annotations
 
 class ObjectDetectionWithWebcam:

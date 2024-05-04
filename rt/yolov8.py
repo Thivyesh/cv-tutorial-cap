@@ -19,8 +19,9 @@ class ObjectDetectionWithWebcam:
             model_weights (str): Path to the YOLO model weights file (default is 'yolov8s.pt').
         """
         self.model = YOLO(model_weights)
-        self.webcam = cv2.VideoCapture(0)
-
+        # Hvis windows bruk:
+        # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
+        self.webcam = cv2.VideoCapture(0) 
         if not self.webcam.isOpened():
             raise RuntimeError("Cannot open webcam")
 
@@ -57,8 +58,6 @@ class ObjectDetectionWithWebcam:
             # Create a label annotator
             label_annotator = sv.LabelAnnotator()
 
-            # Filter out detections with class_id not equal to 0 (background class)
-            detections = detections[detections.class_id != 0]
 
             # Get labels for each detected object
             labels = [
