@@ -1,3 +1,4 @@
+
 import glob
 import torch
 import torchvision.transforms as transforms
@@ -6,11 +7,10 @@ from torch.utils.data import DataLoader
 from PIL import ImageDraw
 from transformers import pipeline
 from model import InferDataset
-import numpy as np
-import cv2
+
 
 class ObjectDetectionPipeline:
-    def __init__(self, img_dir: str, batch_size: int = 64):
+    def __init__(self, img_dir: str, batch_size: int = 64) -> None:
         """
         Initializes the object detection pipeline.
 
@@ -33,7 +33,7 @@ class ObjectDetectionPipeline:
         )
         self.pipe = pipeline(model="facebook/detr-resnet-50", task="object-detection")
 
-    def infer_and_display(self):
+    def infer_and_display(self) -> None:
         """
         Performs object detection on images from the directory and displays the results.
         """
