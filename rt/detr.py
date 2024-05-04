@@ -20,6 +20,8 @@ class ObjectDetectionWithWebcam:
             checkpoint (str): Name or path of the DETR checkpoint (default is "facebook/detr-resnet-50").
         """
         self.detector = pipeline(model=checkpoint, task="object-detection")
+        # If windows use:
+        # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
         self.webcam = cv2.VideoCapture(0)
 
         if not self.webcam.isOpened():

@@ -19,7 +19,7 @@ class ObjectDetectionWithWebcam:
             model_weights (str): Path to the YOLO model weights file (default is 'yolov8s.pt').
         """
         self.model = YOLO(model_weights)
-        # Hvis windows bruk:
+        # If windows use:
         # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
         self.webcam = cv2.VideoCapture(0) 
         if not self.webcam.isOpened():

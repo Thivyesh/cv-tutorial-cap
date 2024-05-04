@@ -19,7 +19,8 @@ class ObjectDetectionWithWebcam:
             model_weights (str): Path to the YOLO model weights file (default is 'yolov8s.pt').
         """
         self.model = torch.hub.load(model_weights, model_name, pretrained=True)
-
+        # If windows use:
+        # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
         self.webcam = cv2.VideoCapture(0)
 
         if not self.webcam.isOpened():
