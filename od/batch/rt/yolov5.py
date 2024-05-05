@@ -20,8 +20,10 @@ class ObjectDetectionWithWebcam:
         """
         self.model = torch.hub.load(model_weights, model_name, pretrained=True)
         # If windows use:
-        # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
-        self.webcam = cv2.VideoCapture(0)
+        self.webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        
+        # If Mac use:
+        #self.webcam = cv2.VideoCapture(0)
 
         if not self.webcam.isOpened():
             raise RuntimeError("Cannot open webcam")
@@ -64,9 +66,9 @@ class ObjectDetectionWithWebcam:
 
             # Get labels for each detected object
             labels = [
-                self.model.model.names[class_id]
-                for class_id
-                in detections.class_id
+                f"{self.model.model.names[class_name]} {confidence:.2f}"
+                for class_name, confidence
+                in zip(detections.class_id, detections.confidence)
             ]
 
             # Annotate the frame with bounding boxes
