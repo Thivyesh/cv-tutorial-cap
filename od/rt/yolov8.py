@@ -1,5 +1,5 @@
 import cv2
-import torch 
+from ultralytics import YOLO  # Import YOLO model from Ultralytics
 import supervision as sv  # Import the supervision library for annotations
 
 class ObjectDetectionWithWebcam:
@@ -11,18 +11,20 @@ class ObjectDetectionWithWebcam:
         webcam (cv2.VideoCapture): Webcam object for capturing frames.
     """
 
-    def __init__(self, model_weights: str = "ultralytics/yolov5", model_name: str = "yolov5s"):
+    def __init__(self, model_weights: str = 'yolov8s.pt'):
         """
         Initializes the ObjectDetectionWithWebcam class.
 
         Args:
             model_weights (str): Path to the YOLO model weights file (default is 'yolov8s.pt').
         """
-        self.model = torch.hub.load(model_weights, model_name, pretrained=True)
+        self.model = YOLO(model_weights)
+        
         # If windows use:
-        # self.webcam = cv2.VideoCapture(0, cv2.DSHOW)
-        self.webcam = cv2.VideoCapture(0)
-
+        self.webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        
+        # If Mac use:
+        #self.webcam = cv2.VideoCapture(0) 
         if not self.webcam.isOpened():
             raise RuntimeError("Cannot open webcam")
 
@@ -46,10 +48,10 @@ class ObjectDetectionWithWebcam:
                 break
             
             # Perform object detection on the frame using the YOLO model
-            results = self.model(frame)
+            results = self.model(frame)[0]
 
             # Convert YOLO detections to Supervision Detections format
-            detections = sv.Detections.from_yolov5(results)
+            detections = sv.Detections.from_ultralytics(results)
 
             # Create a bounding box annotator with specified thickness
             bounding_box_annotator = sv.BoundingBoxAnnotator(
@@ -59,14 +61,11 @@ class ObjectDetectionWithWebcam:
             # Create a label annotator
             label_annotator = sv.LabelAnnotator()
 
-            # Filter out detections with class_id not equal to 0 (human class)
-            # detections = detections[detections.class_id != 0] #optional
-
             # Get labels for each detected object
             labels = [
-                self.model.model.names[class_id]
-                for class_id
-                in detections.class_id
+                f"{self.model.model.names[class_name]} {confidence:.2f}"
+                for class_name, confidence
+                in zip(detections.class_id, detections.confidence)
             ]
 
             # Annotate the frame with bounding boxes
