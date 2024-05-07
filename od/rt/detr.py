@@ -21,7 +21,7 @@ class ObjectDetectionWithWebcam:
         """
         self.detector = pipeline(model=checkpoint, task="object-detection")
         # If windows use:
-        self.webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.webcam = cv2.VideoCapture(1)
         
         # If Mac use:
         #self.webcam = cv2.VideoCapture(0)

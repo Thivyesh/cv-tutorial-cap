@@ -21,7 +21,7 @@ class ObjectDetectionWithWebcam:
         self.model = YOLO(model_weights)
         
         # If windows use:
-        self.webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.webcam = cv2.VideoCapture(0)
         
         # If Mac use:
         #self.webcam = cv2.VideoCapture(0) 

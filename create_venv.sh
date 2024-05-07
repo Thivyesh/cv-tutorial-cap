@@ -1,12 +1,12 @@
-#Kjør disse kommandoene en etter en for å lage venv
+#Run these commands to create a venv
 
 #Create venv
-python3 -m venv cvWorkshop1
+python3 -m venv cvw
 
 #Activate on windows:
-myenv\Scripts\activate
+cvw\Scripts\activate
 #Activate on Mac/linux
-source myenv/bin/activate
+source cvw/bin/activate
 
 #Install requirements
 pip install -r requirements.txt
